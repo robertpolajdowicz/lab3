@@ -2,32 +2,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SubjectInstance {
-    Subject subject;
-    int year;
-    Teacher teacher;
-    List<Student> students = new ArrayList<>();
-    int limit;
+    private Subject subject;
+    private int year;
+    private int limit;
+    private Teacher teacher;
 
-    public SubjectInstance(Subject subject, int year, Teacher teacher, int limit) {
+    List<Student> students = new ArrayList<Student>();
+
+    public SubjectInstance(Subject subject, int year, int limit, Teacher teacher) {
         this.subject = subject;
         this.year = year;
-        this.teacher = teacher;
         this.limit = limit;
+        this.teacher = teacher;
     }
 
-    public boolean enroll(Student s) {
-
-        if (students.size() < limit) {
-            students.add(s);
+    public boolean enroll(Student student) {
+        if(students.size() < limit) {
+            students.add(student);
             return true;
-        } else {
-            return false;
         }
+        else return false;
     }
 
-    public List<Student> getCopy() {
+    public List<Student> getStudentsCopy() {  // do zadania 5
         return List.copyOf(students);
     }
 
-
+    public int getLimit() {  // do zadania 6
+        return limit;
+    }
 }

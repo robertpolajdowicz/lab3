@@ -1,0 +1,498 @@
+Index: src/Student.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import java.time.LocalDate;\r\nimport java.time.Month;\r\n\r\npublic class Student extends Account {\r\n\r\n    private String course;\r\n    private int startYear;\r\n\r\n    public Student(String login, String password, String firstName, String lastName, String course, int startYear) {\r\n        super(login, password, firstName, lastName);\r\n        this.course = course;\r\n        this.startYear = startYear;\r\n    }\r\n\r\n    public int semester(){\r\n        LocalDate today = LocalDate.now();\r\n        int todayYear = today.getYear();\r\n        Month todayMonth = today.getMonth();\r\n\r\n        if(todayMonth.compareTo(Month.OCTOBER) < 0){\r\n            todayYear--;\r\n        }\r\n        int sem = (todayYear - startYear) * 2 + 1;\r\n        if(todayMonth.compareTo(Month.FEBRUARY) >= 0 && todayMonth.compareTo(Month.OCTOBER) < 0){\r\n            sem++;\r\n        }\r\n        return sem;\r\n    }\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Student.java b/src/Student.java
+--- a/src/Student.java	(revision f0bcf2a0bd345cdd8981fb2e3316758e05758e05)
++++ b/src/Student.java	(date 1616580065791)
+@@ -1,36 +1,29 @@
+ import java.time.LocalDate;
+ import java.time.Month;
+ 
+-public class Student extends Account {
+-
+-    private String course;
++public class Student extends Account{
+     private int startYear;
++    private String course;
+ 
+-    public Student(String login, String password, String firstName, String lastName, String course, int startYear) {
++    public Student(String login, String password, String firstName, String lastName, int startYear, String course) {
+         super(login, password, firstName, lastName);
+-        this.course = course;
+         this.startYear = startYear;
++        this.course = course;
+     }
+ 
+-    public int semester(){
+-        LocalDate today = LocalDate.now();
+-        int todayYear = today.getYear();
+-        Month todayMonth = today.getMonth();
+-
+-        if(todayMonth.compareTo(Month.OCTOBER) < 0){
+-            todayYear--;
+-        }
+-        int sem = (todayYear - startYear) * 2 + 1;
+-        if(todayMonth.compareTo(Month.FEBRUARY) >= 0 && todayMonth.compareTo(Month.OCTOBER) < 0){
+-            sem++;
+-        }
+-        return sem;
+-    }
+-
+-
+-
++    public int semester() {
++        LocalDate date = LocalDate.now();
++        Month month = date.getMonth();
++        int year = date.getYear();
+ 
++        if(month.compareTo(Month.OCTOBER)<0)
++            year--;
+ 
++        int semester = (year - startYear) * 2 + 1;
+ 
++        if(month.compareTo(Month.FEBRUARY) >= 0 && month.compareTo(Month.OCTOBER)<0)
++            semester++;
+ 
++        return semester;
++    }
+ }
+Index: src/Subject.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>public class Subject {\r\n    public Subject(String name, String course, int semester) {\r\n        this.name = name;\r\n        this.course = course;\r\n        this.semester = semester;\r\n    }\r\n\r\n    private String name;\r\n    private String course;\r\n    private int semester;\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Subject.java b/src/Subject.java
+--- a/src/Subject.java	(revision f0bcf2a0bd345cdd8981fb2e3316758e05758e05)
++++ b/src/Subject.java	(date 1616580039264)
+@@ -1,12 +1,10 @@
+ public class Subject {
++    String name, course;
++    int semester;
++
+     public Subject(String name, String course, int semester) {
+         this.name = name;
+         this.course = course;
+         this.semester = semester;
+     }
+-
+-    private String name;
+-    private String course;
+-    private int semester;
+-
+ }
+Index: src/SubjectInstance.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import java.util.ArrayList;\r\nimport java.util.List;\r\n\r\npublic class SubjectInstance {\r\n    Subject subject;\r\n    int year;\r\n    Teacher teacher;\r\n    List<Student> students = new ArrayList<>();\r\n    int limit;\r\n\r\n    public SubjectInstance(Subject subject, int year, Teacher teacher, int limit) {\r\n        this.subject = subject;\r\n        this.year = year;\r\n        this.teacher = teacher;\r\n        this.limit = limit;\r\n    }\r\n\r\n    public boolean enroll(Student s) {\r\n\r\n        if (students.size() < limit) {\r\n            students.add(s);\r\n            return true;\r\n        } else {\r\n            return false;\r\n        }\r\n    }\r\n\r\n    public List<Student> getCopy() {\r\n        return List.copyOf(students);\r\n    }\r\n\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/SubjectInstance.java b/src/SubjectInstance.java
+--- a/src/SubjectInstance.java	(revision f0bcf2a0bd345cdd8981fb2e3316758e05758e05)
++++ b/src/SubjectInstance.java	(date 1616580012502)
+@@ -2,32 +2,33 @@
+ import java.util.List;
+ 
+ public class SubjectInstance {
+-    Subject subject;
+-    int year;
+-    Teacher teacher;
+-    List<Student> students = new ArrayList<>();
+-    int limit;
++    private Subject subject;
++    private int year;
++    private int limit;
++    private Teacher teacher;
+ 
+-    public SubjectInstance(Subject subject, int year, Teacher teacher, int limit) {
++    List<Student> students = new ArrayList<Student>();
++
++    public SubjectInstance(Subject subject, int year, int limit, Teacher teacher) {
+         this.subject = subject;
+         this.year = year;
+-        this.teacher = teacher;
+         this.limit = limit;
++        this.teacher = teacher;
+     }
+ 
+-    public boolean enroll(Student s) {
+-
+-        if (students.size() < limit) {
+-            students.add(s);
++    public boolean enroll(Student student) {
++        if(students.size() < limit) {
++            students.add(student);
+             return true;
+-        } else {
+-            return false;
+         }
++        else return false;
+     }
+ 
+-    public List<Student> getCopy() {
++    public List<Student> getStudentsCopy() {  // do zadania 5
+         return List.copyOf(students);
+     }
+ 
+-
++    public int getLimit() {  // do zadania 6
++        return limit;
++    }
+ }
+Index: src/Account.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import java.time.LocalDate;\r\nimport java.util.ArrayList;\r\nimport java.util.List;\r\n\r\npublic class Account {\r\n    public String getLogin() {\r\n        return login;\r\n    }\r\n\r\n    public String getLastName() {\r\n        return lastName;\r\n    }\r\n\r\n    private String login;\r\n    private String password;\r\n    private String firstName;\r\n    private String lastName;\r\n    private LocalDate lastlogin;\r\n\r\n    public Account(String login, String password, String firstName, String lastName) {\r\n        while (isLoginUsed(login)) {\r\n            login += \"1\";\r\n        }\r\n\r\n        this.login = login;\r\n        this.password = password;\r\n        this.firstName = firstName;\r\n        this.lastName = lastName;\r\n        this.lastlogin = LocalDate.parse(\"1970-01-01\");\r\n        list.add(this);\r\n\r\n\r\n    }\r\n\r\n    public boolean authorize(String login, String password) {\r\n        if (this.login.equals(login) && this.password.equals(password)) {\r\n            this.lastlogin = LocalDate.now();\r\n            return true;\r\n        } else {\r\n            return false;\r\n        }\r\n    }\r\n\r\n    public final String toString() {\r\n        return firstName + \" \" + lastName;\r\n    }\r\n\r\n    private static List<Account> list = new ArrayList<>();\r\n\r\n    private boolean isLoginUsed(String login) {\r\n        for (var l : list) {\r\n            if (l.login.equals(login)) {\r\n                return true;\r\n            }\r\n        }\r\n        return false;\r\n    }\r\n\r\n    public Account(Account a) {\r\n        this(a.login, a.password, a.firstName, a.lastName);\r\n        this.lastlogin = a.lastlogin;\r\n    }\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Account.java b/src/Account.java
+--- a/src/Account.java	(revision f0bcf2a0bd345cdd8981fb2e3316758e05758e05)
++++ b/src/Account.java	(date 1616580104341)
+@@ -3,62 +3,56 @@
+ import java.util.List;
+ 
+ public class Account {
+-    public String getLogin() {
+-        return login;
+-    }
++    private String login, password, firstName, lastName;
++    private LocalDate lastLogin;
+ 
+-    public String getLastName() {
+-        return lastName;
+-    }
+ 
+-    private String login;
+-    private String password;
+-    private String firstName;
+-    private String lastName;
+-    private LocalDate lastlogin;
++
+ 
+     public Account(String login, String password, String firstName, String lastName) {
+-        while (isLoginUsed(login)) {
++        while(isLoginUsed(login))
+             login += "1";
+-        }
+-
+         this.login = login;
+         this.password = password;
+         this.firstName = firstName;
+         this.lastName = lastName;
+-        this.lastlogin = LocalDate.parse("1970-01-01");
+-        list.add(this);
++        this.lastLogin = LocalDate.of(1970,1,1);
++        accounts.add(this);
++    }
++
++    public Account(Account other) {
++        this(other.login, other.password, other.firstName, other.lastName);
++        this.lastLogin = other.lastLogin;
++    }
+ 
++    public String getLastName() { // do zadania 6
++        return lastName;
++    }
+ 
++    public String getLogin() {  // do zadania 3
++        return login;
++    }
++
++    private boolean isLoginUsed(String login) {
++        for(var account:accounts) {
++            if(account.login.equals(login))
++                return true;
++        }
++        return false;
+     }
+ 
+     public boolean authorize(String login, String password) {
+-        if (this.login.equals(login) && this.password.equals(password)) {
+-            this.lastlogin = LocalDate.now();
++        if(this.login.equals(login) && this.password.equals(password)) {
++            lastLogin = LocalDate.now();
+             return true;
+-        } else {
+-            return false;
+         }
++        else return false;
+     }
+ 
+-    public final String toString() {
+-        return firstName + " " + lastName;
++    final public String toString() {
++        return firstName+" "+lastName;
+     }
+-
+-    private static List<Account> list = new ArrayList<>();
+-
+-    private boolean isLoginUsed(String login) {
+-        for (var l : list) {
+-            if (l.login.equals(login)) {
+-                return true;
+-            }
+-        }
+-        return false;
+-    }
++    static private  List<Account> accounts = new ArrayList<>();
++}
+ 
+-    public Account(Account a) {
+-        this(a.login, a.password, a.firstName, a.lastName);
+-        this.lastlogin = a.lastlogin;
+-    }
+ 
+-}
+\ No newline at end of file
+Index: src/Main.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import java.util.AbstractCollection;\r\n\r\npublic class Main {\r\n    public static void main(String[] args) {\r\n        Account acc = new Account(\"admin\", \"admin\", \"Marcin\", \"Mount\");\r\n        System.out.println(acc.authorize(\"1admin\", \"admin\"));\r\n        Teacher prof = new Teacher(\"admin\", \"admin\", \"Józef\", \"Smith\", \"Profesor\");\r\n        System.out.println(acc.toString());\r\n        System.out.println(prof.toString());\r\n\r\n        System.out.println(prof.getLogin());\r\n        System.out.println(acc.getLogin());\r\n        Account tea = new Account(\"admin\", \"admin\", \"marcin\", \"marcinowski\");\r\n        System.out.println(tea.getLogin());\r\n\r\n        Student zak = new Student(\"admin123\",\"1234\",\"Jan\",\"Kowalski\",\"Informatyka\",2019);\r\n        Student zak2 = new Student(\"admin123\",\"1234\",\"Jan\",\"Olsza\",\"Informatyka\",2019);\r\n        Student zak3 = new Student(\"admin123\",\"1234\",\"Jan\",\"Krzystof\",\"Informatyka\",2019);\r\n        System.out.println(zak.semester());\r\n\r\n        Subject sub= new Subject(\"Matematyka Dyskretna\",\"Informatyka\",2);\r\n        SubjectInstance subi = new SubjectInstance(sub,2020,prof,2);\r\n        //subi.enroll(zak);\r\n        //subi.enroll(zak2);\r\n        //subi.enroll(zak3);\r\n        //System.out.println(subi.getCopy());\r\n\r\n        Enroller interfejs= new AlphabeticEnroller();\r\n        interfejs.setSubjectInstance(subi);\r\n        interfejs.addStudent(zak);\r\n        interfejs.addStudent(zak2);\r\n        interfejs.addStudent(zak3);\r\n        interfejs.process();\r\n        System.out.println(subi.getCopy());\r\n\r\n\r\n\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Main.java b/src/Main.java
+--- a/src/Main.java	(revision f0bcf2a0bd345cdd8981fb2e3316758e05758e05)
++++ b/src/Main.java	(date 1616579916872)
+@@ -1,39 +1,53 @@
+-import java.util.AbstractCollection;
++
+ 
+ public class Main {
++
+     public static void main(String[] args) {
+-        Account acc = new Account("admin", "admin", "Marcin", "Mount");
+-        System.out.println(acc.authorize("1admin", "admin"));
+-        Teacher prof = new Teacher("admin", "admin", "Józef", "Smith", "Profesor");
+-        System.out.println(acc.toString());
+-        System.out.println(prof.toString());
++        // 1
++        Account a1 = new Account("jkowalski", "1234", "Jan", "Kowalski");
++        System.out.println(a1.authorize("jkowalski", "1234"));
++        System.out.println(a1.authorize("akowalska", "1234"));
++
++        // 2
++        Account a2 = new Teacher("anowak", "1234", "Adam", "Nowak", "dr");
++        System.out.println(a2);
++
++        // 3
++        Account a3 = new Teacher("anowak", "1234", "Anna", "Nowak", "prof.");
++        Account a4 = new Teacher("anowak", "1234", "Andrzej", "Nowak", "dr");
++        System.out.println(a3.getLogin());
++        System.out.println(a4.getLogin());
++
++        // 4
++        Student a5 = new Student("ab", "1234", "A", "B", 2020, "informatyka");
++        Student a6 = new Student("cd", "1234", "C", "D", 2018, "informatyka");
++        System.out.println(a5.semester());
++        System.out.println(a6.semester());
+ 
+-        System.out.println(prof.getLogin());
+-        System.out.println(acc.getLogin());
+-        Account tea = new Account("admin", "admin", "marcin", "marcinowski");
+-        System.out.println(tea.getLogin());
++        // 5
++        Subject s = new Subject("Programowanie obiektowe", "informatyka", 2);
++        SubjectInstance si1 = new SubjectInstance(s, 2020, 2 , (Teacher) a2);
++        Student a7 = new Student("ef", "1234", "E", "F", 2019, "informatyka");
++        System.out.println(a7.semester());
++        si1.enroll(a5);
++        si1.enroll(a6);
++        si1.enroll(a7);
+ 
+-        Student zak = new Student("admin123","1234","Jan","Kowalski","Informatyka",2019);
+-        Student zak2 = new Student("admin123","1234","Jan","Olsza","Informatyka",2019);
+-        Student zak3 = new Student("admin123","1234","Jan","Krzystof","Informatyka",2019);
+-        System.out.println(zak.semester());
++        System.out.println(si1.getStudentsCopy());
+ 
+-        Subject sub= new Subject("Matematyka Dyskretna","Informatyka",2);
+-        SubjectInstance subi = new SubjectInstance(sub,2020,prof,2);
+-        //subi.enroll(zak);
+-        //subi.enroll(zak2);
+-        //subi.enroll(zak3);
+-        //System.out.println(subi.getCopy());
++        // 6
++        SubjectInstance si2 = new SubjectInstance(s, 2020, 2 , (Teacher) a2);
++        Enroller enroller = new RandomEnroller();
++        enroller.setSubjectInstance(si2);
++        enroller.addStudent(a7);
++        enroller.addStudent(a6);
++        enroller.addStudent(a5);
++        enroller.process();
++        System.out.println(si2.getStudentsCopy());
+ 
+-        Enroller interfejs= new AlphabeticEnroller();
+-        interfejs.setSubjectInstance(subi);
+-        interfejs.addStudent(zak);
+-        interfejs.addStudent(zak2);
+-        interfejs.addStudent(zak3);
+-        interfejs.process();
+-        System.out.println(subi.getCopy());
+ 
+ 
+ 
++
+     }
+-}
+\ No newline at end of file
++}
+Index: src/Teacher.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>public class Teacher extends Account {\r\n    private String title;\r\n\r\n    public Teacher(String login, String password, String firstName, String lastName, String title) {\r\n        super(login, password, firstName, lastName);\r\n        this.title = title;\r\n    }\r\n\r\n//public String toString(){\r\n//        return title+\" \"+super.toString();\r\n//}\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Teacher.java b/src/Teacher.java
+--- a/src/Teacher.java	(revision f0bcf2a0bd345cdd8981fb2e3316758e05758e05)
++++ b/src/Teacher.java	(date 1616579981945)
+@@ -2,11 +2,8 @@
+     private String title;
+ 
+     public Teacher(String login, String password, String firstName, String lastName, String title) {
+-        super(login, password, firstName, lastName);
+-        this.title = title;
++        super (login, password, firstName, lastName);
++        this.title=title;
+     }
+ 
+-//public String toString(){
+-//        return title+" "+super.toString();
+-//}
+ }
+Index: src/AlphabeticEnroller.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import java.util.ArrayList;\r\nimport java.util.List;\r\n\r\npublic class AlphabeticEnroller implements Enroller {\r\n\r\n    SubjectInstance subi;\r\n    List<Student> studentsList = new ArrayList<>();\r\n\r\n    @Override\r\n    public void clear() {\r\n        studentsList.clear();\r\n    }\r\n\r\n    @Override\r\n    public void setSubjectInstance(SubjectInstance subinst) {\r\n        subi = subinst;\r\n    }\r\n\r\n    @Override\r\n    public void addStudent(Student stu) {\r\n        studentsList.add(stu);\r\n    }\r\n\r\n    @Override\r\n    public void process() {\r\n        studentsList.sort((Student a, Student b) -> a.getLastName().compareTo(b.getLastName()));\r\n        subi.students = studentsList.subList(0, subi.limit);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/AlphabeticEnroller.java b/src/AlphabeticEnroller.java
+--- a/src/AlphabeticEnroller.java	(revision f0bcf2a0bd345cdd8981fb2e3316758e05758e05)
++++ b/src/AlphabeticEnroller.java	(date 1616580083502)
+@@ -1,29 +1,30 @@
+ import java.util.ArrayList;
++import java.util.Collections;
+ import java.util.List;
+ 
+ public class AlphabeticEnroller implements Enroller {
+-
+-    SubjectInstance subi;
+-    List<Student> studentsList = new ArrayList<>();
++    private List<Student> students = new ArrayList<>();
++    SubjectInstance instance;
+ 
+     @Override
+     public void clear() {
+-        studentsList.clear();
++        students.clear();
++    }
++
++
++    public void setSubjectInstance(SubjectInstance instance) {
++        this.instance = instance;
+     }
+ 
+     @Override
+-    public void setSubjectInstance(SubjectInstance subinst) {
+-        subi = subinst;
+-    }
+-
+-    @Override
+-    public void addStudent(Student stu) {
+-        studentsList.add(stu);
++    public void addStudent(Student student) {
++        students.add(student);
+     }
+ 
+     @Override
+     public void process() {
+-        studentsList.sort((Student a, Student b) -> a.getLastName().compareTo(b.getLastName()));
+-        subi.students = studentsList.subList(0, subi.limit);
++        students.sort((Student a, Student b) -> a.getLastName().compareTo(b.getLastName()));
++        instance.students=students.subList(0,instance.getLimit());
++
+     }
+ }
+Index: src/RandomEnroller.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/RandomEnroller.java b/src/RandomEnroller.java
+new file mode 100644
+--- /dev/null	(date 1616579991623)
++++ b/src/RandomEnroller.java	(date 1616579991623)
+@@ -0,0 +1,47 @@
++import java.util.*;
++
++public class RandomEnroller implements Enroller {
++
++    private class StudentWithRandomNumber {
++        final Student student;
++
++        public Double getValue() {
++            return value;
++        }
++
++        final Double value;
++
++        private StudentWithRandomNumber(Student student, double value) {
++            this.student = student;
++            this.value = value;
++        }
++    }
++
++    List<StudentWithRandomNumber> students = new ArrayList<>();
++    SubjectInstance instance;
++
++
++    @Override
++    public void clear() {
++        students.clear();
++    }
++
++    @Override
++    public void setSubjectInstance(SubjectInstance instance) {
++        this.instance = instance;
++    }
++
++    @Override
++    public void addStudent(Student student) {
++        students.add(new StudentWithRandomNumber(student, Math.random()));
++    }
++
++    @Override
++    public void process() {
++        students.sort(Comparator.comparingDouble(StudentWithRandomNumber::getValue));
++        for(int i=0; i<instance.getLimit() && i<students.size(); i++)
++            instance.enroll(students.get(i).student);
++    }
++
++
++}
+Index: .idea/vcs.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/vcs.xml b/.idea/vcs.xml
+new file mode 100644
+--- /dev/null	(date 1615986347127)
++++ b/.idea/vcs.xml	(date 1615986347127)
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="VcsDirectoryMappings">
++    <mapping directory="$PROJECT_DIR$" vcs="Git" />
++  </component>
++</project>
+\ No newline at end of file

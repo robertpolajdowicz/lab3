@@ -1,37 +1,51 @@
-import java.util.AbstractCollection;
+
 
 public class Main {
+
     public static void main(String[] args) {
-        Account acc = new Account("admin", "admin", "Marcin", "Mount");
-        System.out.println(acc.authorize("1admin", "admin"));
-        Teacher prof = new Teacher("admin", "admin", "Józef", "Smith", "Profesor");
-        System.out.println(acc.toString());
-        System.out.println(prof.toString());
+        // 1
+        Account a1 = new Account("jkowalski", "1234", "Jan", "Kowalski");
+        System.out.println(a1.authorize("jkowalski", "1234"));
+        System.out.println(a1.authorize("akowalska", "1234"));
 
-        System.out.println(prof.getLogin());
-        System.out.println(acc.getLogin());
-        Account tea = new Account("admin", "admin", "marcin", "marcinowski");
-        System.out.println(tea.getLogin());
+        // 2
+        Account a2 = new Teacher("anowak", "1234", "Adam", "Nowak", "dr");
+        System.out.println(a2);
 
-        Student zak = new Student("admin123","1234","Jan","Kowalski","Informatyka",2019);
-        Student zak2 = new Student("admin123","1234","Jan","Olsza","Informatyka",2019);
-        Student zak3 = new Student("admin123","1234","Jan","Krzystof","Informatyka",2019);
-        System.out.println(zak.semester());
+        // 3
+        Account a3 = new Teacher("anowak", "1234", "Anna", "Nowak", "prof.");
+        Account a4 = new Teacher("anowak", "1234", "Andrzej", "Nowak", "dr");
+        System.out.println(a3.getLogin());
+        System.out.println(a4.getLogin());
 
-        Subject sub= new Subject("Matematyka Dyskretna","Informatyka",2);
-        SubjectInstance subi = new SubjectInstance(sub,2020,prof,2);
-        //subi.enroll(zak);
-        //subi.enroll(zak2);
-        //subi.enroll(zak3);
-        //System.out.println(subi.getCopy());
+        // 4
+        Student a5 = new Student("ab", "1234", "A", "B", 2020, "informatyka");
+        Student a6 = new Student("cd", "1234", "C", "D", 2018, "informatyka");
+        System.out.println(a5.semester());
+        System.out.println(a6.semester());
 
-        Enroller interfejs= new AlphabeticEnroller();
-        interfejs.setSubjectInstance(subi);
-        interfejs.addStudent(zak);
-        interfejs.addStudent(zak2);
-        interfejs.addStudent(zak3);
-        interfejs.process();
-        System.out.println(subi.getCopy());
+        // 5
+        Subject s = new Subject("Programowanie obiektowe", "informatyka", 2);
+        SubjectInstance si1 = new SubjectInstance(s, 2020, 2 , (Teacher) a2);
+        Student a7 = new Student("ef", "1234", "E", "F", 2019, "informatyka");
+        System.out.println(a7.semester());
+        si1.enroll(a5);
+        si1.enroll(a6);
+        si1.enroll(a7);
+
+        System.out.println(si1.getStudentsCopy());
+
+        // 6
+        SubjectInstance si2 = new SubjectInstance(s, 2020, 2 , (Teacher) a2);
+        Enroller enroller = new RandomEnroller();
+        enroller.setSubjectInstance(si2);
+        enroller.addStudent(a7);
+        enroller.addStudent(a6);
+        enroller.addStudent(a5);
+        enroller.process();
+        System.out.println(si2.getStudentsCopy());
+
+
 
 
 

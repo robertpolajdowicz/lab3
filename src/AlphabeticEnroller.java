@@ -1,29 +1,30 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class AlphabeticEnroller implements Enroller {
-
-    SubjectInstance subi;
-    List<Student> studentsList = new ArrayList<>();
+    private List<Student> students = new ArrayList<>();
+    SubjectInstance instance;
 
     @Override
     public void clear() {
-        studentsList.clear();
+        students.clear();
+    }
+
+
+    public void setSubjectInstance(SubjectInstance instance) {
+        this.instance = instance;
     }
 
     @Override
-    public void setSubjectInstance(SubjectInstance subinst) {
-        subi = subinst;
-    }
-
-    @Override
-    public void addStudent(Student stu) {
-        studentsList.add(stu);
+    public void addStudent(Student student) {
+        students.add(student);
     }
 
     @Override
     public void process() {
-        studentsList.sort((Student a, Student b) -> a.getLastName().compareTo(b.getLastName()));
-        subi.students = studentsList.subList(0, subi.limit);
+        students.sort((Student a, Student b) -> a.getLastName().compareTo(b.getLastName()));
+        instance.students=students.subList(0,instance.getLimit());
+
     }
 }
